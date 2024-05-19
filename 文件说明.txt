@@ -1,0 +1,17 @@
+ [文件说明]
+
+- main.cpp		主函数，执行指令调用的函数分配
+
+- help.cpp		帮助函数，存放'help'调出的指令
+
+- FileSystem.cpp		文件系统函数，存放高级封装的文件系统函数（如初始化、打开文件等，内部调用多个其他类成员函数）
+
+- FileManager.cpp	文件管理函数，存放封装的文件指令（如读写、对 Inode 或 Block 的操作）
+
+- DiskManager.cpp	磁盘管理函数，存放磁盘相关成员函数（磁盘读写）
+
+- Controller.cpp		顶层模块，负责文件系统和命令行的交互
+
+- BufferManager.cpp	高速缓存管理模块（如LRU的执行等）
+
+- BlockManager.cpp	盘块管理模块（如盘块的分配、地址的转换等）
