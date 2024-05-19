@@ -74,8 +74,18 @@ int main()
 	printinfo();
 	
 	while (true) {
+		
 		COLOR_PRINT("\nFS ", 14);
-		cout << myManager.path.substr(0, myManager.path.size() - 1);
+		
+		if (myManager.path.substr(0, myManager.path.size() - 1).size() >= 2 && myManager.path.substr(0, myManager.path.size() - 1)[0] == myManager.path.substr(0, myManager.path.size() - 1)[1]) {
+			for (int i = 1; i < myManager.path.substr(0, myManager.path.size() - 1).size(); i++) {
+				cout<< myManager.path.substr(0, myManager.path.size() - 1)[i];
+			}
+			
+		}
+		else {
+			cout << myManager.path.substr(0, myManager.path.size() - 1);
+		}
 		if (myManager.fileName != "") {
 			cout << '(' << myManager.fileName << ')';
 		}

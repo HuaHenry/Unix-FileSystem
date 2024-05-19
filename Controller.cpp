@@ -1,5 +1,13 @@
 #include "Controller.h"
 
+void COLOR_PRINT_S(const char* s, int color)
+{
+	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | color);
+	printf(s);
+	SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | 7);
+}
+
 Controller::Controller()
 {
 	myFileSystem.init(path);
@@ -9,7 +17,9 @@ void Controller::_fformat()
 {
 	myFileSystem._fformat();
 	fileName = "";
-	path = "~\\";	// 内部路径记录已经更新，外部手动更新
+	path = "/";	// 内部路径记录已经更新，外部手动更新
+	COLOR_PRINT_S("\n[Success] ", 2);
+	cout << "磁盘格式化成功" << endl;
 }
 
 void Controller::_ls()
@@ -233,7 +243,7 @@ void Controller::_import(string filePath)
 {
 	string fileName;
 	//cin >> filePath;
-	int pos = filePath.find_last_of('\\');
+	int pos = filePath.find_last_of('/');
 	if (pos >= 0 && pos < filePath.size()) {
 		fileName = filePath.substr(pos);
 	}

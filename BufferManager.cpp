@@ -63,7 +63,6 @@ Buffer* BufferManager::searchFreeBlk()
 Buffer* BufferManager::GetBlk(int blkno)
 {
 	Buffer* buf = nullptr;
-
 	// 判断这一块字符块是否已经在缓存中（是否可以重用）
 	for (int i = 0; i < NBUF; ++i){
 		buf = &m_Buf[i];
@@ -71,16 +70,13 @@ Buffer* BufferManager::GetBlk(int blkno)
 			// 说明这一块字符块已经在缓存中
 			// 因为只有一个进程，所以不需要考虑B_BUSY标志位
 			moveBlk2Rear(buf);				// 将这块缓存块放到队尾
-			// buf->b_flags |= buf->B_BUSY;	// 确保本块已被占用
 			return buf;
 		}
 	}
-
 	// 这一块字符块不在缓存中，需要申请一块缓存块，将对应字符块从磁盘中换入
 	// 首先找一块空闲的缓存块
 	buf = searchFreeBlk();
-	if (buf && (buf->b_flags & buf->B_DELWRI)) {
-		// 说明找到一块空闲，但带有DELWRI标志，此时将其写入磁盘
+	if (buf && (buf->b_flags & buf->B_DELWRI)) { // 说明找到一块空闲，但带有DELWRI标志，此时将其写入磁盘
 		Bwrite(buf);
 	}
 	else if (buf == nullptr) {
@@ -90,7 +86,6 @@ Buffer* BufferManager::GetBlk(int blkno)
 		Bwrite(buf);
 	}
 	// 说明找到一块空闲且没有延时写标志，可以直接使用
-
 	buf->b_flags = 0;	// 缓存块刷新
 	buf->b_blkno = blkno;
 	moveBlk2Rear(buf);	// 将这块缓存块放到队尾
@@ -104,13 +99,11 @@ Buffer* BufferManager::Bread(int blkno)
 		// 含BUSY位，说明内容已经换入，无需操作，直接返回
 		return bp;
 	}
-	else {
-		// 不含BUSY位，说明是刚分配的缓存块，需要先读取一下磁盘信息
+	else { // 不含BUSY位，说明是刚分配的缓存块，需要先读取一下磁盘信息
 		if (!myDisk.readDisk(bp->b_blkno, bp->b_addr)) {
 			cout << "ERROR: Read disk failed! Block number: " << bp->b_blkno << endl;
 			exit(EXIT_FAILURE);
 		}
-
 		bp->b_flags |= bp->B_BUSY;	// 读取完毕，置BUSY位
 		return bp;
 	}
@@ -120,12 +113,10 @@ Buffer* BufferManager::Bread(int blkno)
 void BufferManager::Bwrite(Buffer* bp)
 {
 	bp->b_wcount = BLOCK_SIZE;
-
 	if (!myDisk.writeDisk(bp->b_blkno, bp->b_addr)) {
 		cout << "ERROR: Write disk failed! Block number: " << bp->b_blkno << endl;
 		exit(EXIT_FAILURE);
 	}
-
 	bp->b_flags = 0;	// 写操作完成后，缓存块刷新
 }
 

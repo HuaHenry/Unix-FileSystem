@@ -6,7 +6,7 @@ void FileManager::init(BufferManager* buff, BlockManager* blk)
 	m_BlockManager = blk;
 
 	pathInode = readInode(0);	// 0号结点指示文件目录的根结点
-	paths.push_back("~");		// 当前路径插入根路径
+	paths.push_back("/");		// 当前路径插入根路径
 }
 
 void FileManager::setFileOffset(int offset)
@@ -34,7 +34,7 @@ void FileManager::flush()
 	inode.i_mode = inode.IDIR;
 
 	uint8_t root[FILE_ITEM_BYTES] = {};
-	// .当前目录为"~"
+	// .当前目录为"/"
 	root[0] = '.';
 	m_BufferManager->write(root, blknoTransform(0, inode), 0, FILE_ITEM_BYTES);
 	// ..上一级目录也为自身
@@ -45,7 +45,7 @@ void FileManager::flush()
 
 	// 当前存在的一些变量也需要更改
 	paths.clear();
-	paths.push_back("~");
+	paths.push_back("/");
 	pathInode = readInode(0);
 	fileOffset = 0;
 
@@ -540,7 +540,7 @@ string FileManager::renewPath()
 {
 	string ret;
 	for (string str : paths) {
-		ret += str + "\\";
+		ret += str + "/";
 	}
 	return ret;
 }
